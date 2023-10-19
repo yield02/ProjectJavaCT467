@@ -1,31 +1,27 @@
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Scanner;
+import DatabaseConnect.DbConnect;
+import Modules.User;
 
 public class MainClass {
-	public static void main(String[] args){
+	public static void main(String[] args){	
+		method mt = new method();
+		User user = new User();
+//		Login/Sigup;
 		
-		Scanner sc = new Scanner(System.in);
-		int acc;
-		while(true) {
-			System.out.print("Bạn đã có tài khoản chưa?(0: Không/1: có)");
-			acc = sc.nextInt();
-			if(acc == 1) { 
-//				Đăng nhập
-				String username;
-				String password;
-				System.out.println("ĐĂNG NHẬP");
-				System.out.print("Tài Khoản:");
-//				username = sc.nextString();
-				
-				break;
-			}
-			else if(acc == 0) {
-//				Tạo tài khoản
-				break;
-			}
-			else {
-				System.out.println("Chỉ nhập giá trị 0 hoặc 1");
-			}
-		}
+		mt.authencation(user);
+//		Đăng nhập xong
+		
+//		Show menu action
+		mt.showmenu(user);
+		
+		
 	}
+	
+	
 }
 
