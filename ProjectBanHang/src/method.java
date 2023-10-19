@@ -132,6 +132,9 @@ public class method {
 		 			}
 			 		break;
 			 	case 3:
+			 		for(int i = 0; i < listProduct.size(); i++) {
+						listProduct.get(i).Show();
+					}
 			 		break;
 			 	case 4:
 			 		c = false;
