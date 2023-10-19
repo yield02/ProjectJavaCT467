@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Scanner;
+import java.io.Console;
 import java.sql.*;
 
 import DatabaseConnect.DbConnect;
@@ -36,6 +37,8 @@ public class User {
 		this.password = password;
 		this.phone = null;
 	}
+	
+	
 	
 	public void Show() {
 		System.out.println("ID: "+ this.id);
@@ -236,21 +239,20 @@ public class User {
 			stmt = db.conn.prepareStatement("SELECT * FROM user WHERE u_name=? and u_password=?");
 			stmt.setString(1, name);
 			stmt.setString(2, password);
-			if (stmt.executeQuery() != null) { 
-		        rs = stmt.getResultSet(); 
-		        while (rs.next()) {
-                    this.id = rs.getInt("u_id");
-                    this.phone = rs.getString("u_phone");
-                }
+			stmt.executeQuery();
+			rs = stmt.getResultSet();
+			if (rs.next()) {
+                this.id = rs.getInt("u_id");
+                this.phone = rs.getString("u_phone");
 		        return true;
 		    } 
 			else {
-				System.out.println("Đăng nhập thất bại");
 				return false;
 			}
 		}
 		catch (SQLException ex){    //xử lý ngoại lệ 
-		    System.out.println("SQLException: " + ex.getMessage()); 
+		    System.out.println("SQLException: " + ex.getMessage());
+		    return false;
 		}
 		finally { 
 		    //giải phóng tài nguyên khi không sử dụng nữa 
@@ -269,8 +271,7 @@ public class User {
 		 
 		        stmt = null; 
 		    } 
-		} 
-		return false;
+		}
 	}
 	public boolean authencationSignUp(String name, String password, String phone) {
 		this.name = name;
