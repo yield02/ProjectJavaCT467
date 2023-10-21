@@ -49,7 +49,7 @@ public class Order {
 					break;
 				case 5:
 					c = false;
-					return ;
+					break;
 				default:
 					System.out.println("Số "+ action +" không có trong bảng chức năng này!. Vui lòng chọn lại");
 					this.action(user);
@@ -64,15 +64,15 @@ public class Order {
 		int stt = 1;
 		try {
 			DbConnect db = new DbConnect();
-			stmt = db.conn.prepareStatement("select * FROM `order`");
+			stmt = db.conn.prepareStatement("select * FROM `order` JOIN user ON o_user = u_id");
 			if (stmt.executeQuery() != null) { 
 		        rs = stmt.getResultSet();
 		        System.out.println("Tất cả đơn hàng");
 		        while (rs.next()) {
 	                int id = rs.getInt("o_id");
-	                int idUser = rs.getInt("o_user");
+	                String user = rs.getString("u_name");
 	                System.out.println("-------Đơn hàng thứ "+ stt + "-------");
-	                System.out.println("ID: " + id + ", user: " + idUser);
+	                System.out.println("ID: " + id + ", user: " + user);
 	                System.out.println("----------------------------");
 	                stt++;
 	            }
@@ -95,16 +95,16 @@ public class Order {
 		int id_order = sc.nextInt();
 		try {
 			DbConnect db = new DbConnect();
-			stmt = db.conn.prepareStatement("select * FROM `order` WHERE o_id= ?");
+			stmt = db.conn.prepareStatement("select * FROM `order` JOIN user ON o_user = u_id WHERE o_id= ?");
 			stmt.setInt(1, id_order);
 			if (stmt.executeQuery() != null) { 
 		        rs = stmt.getResultSet();
 		        System.out.println("Đơn hàng của bạn: ");
 		        while (rs.next()) {
 	                int id = rs.getInt("o_id");
-	                int idUser = rs.getInt("o_user");
+	                String user = rs.getString("u_name");
 	                System.out.println("----------------------------");
-	                System.out.println("ID: " + id + ", user: " + idUser);
+	                System.out.println("ID: " + id + ", user: " + user);
 	                System.out.println("----------------------------");
 	                stt++;
 	            }
