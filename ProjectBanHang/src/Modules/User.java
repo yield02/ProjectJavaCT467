@@ -39,7 +39,9 @@ public class User {
 	}
 	
 	
-	
+	public int getId() {
+		return this.id;
+	}
 	public void Show() {
 		System.out.println("ID: "+ this.id);
 		System.out.println("Name: " + this.name);

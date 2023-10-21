@@ -3,6 +3,7 @@ import java.util.Scanner;
 
 import Modules.Product;
 import Modules.User;
+import Modules.Order;
 
 public class method {
 //	Đăng ký đăng nhập;
@@ -31,7 +32,7 @@ public class method {
 
 //	Show menu
 	
-	public void showmenu(User user) {
+	public void showmenu(User user, Order order) {
 		boolean c = true;
 		while(c == true) {
 			System.out.println("");
@@ -71,7 +72,7 @@ public class method {
 				case 6:
 					break;
 				case 7:
-					
+					order.action(user);
 					break;
 				
 				case 8:
@@ -82,7 +83,7 @@ public class method {
 					
 				default:
 					System.out.println("Số "+ action +" không có trong bảng chức năng này!. Vui lòng chọn lại");
-					this.showmenu(user);
+					this.showmenu(user, order);
 					break;
 			}
 		}
