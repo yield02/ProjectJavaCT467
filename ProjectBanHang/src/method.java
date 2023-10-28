@@ -41,10 +41,8 @@ public class method {
 			System.out.println("2. Chỉnh sửa thông tin.");
 			System.out.println("3. Đổi mật khẩu.");
 			System.out.println("4. Xem danh sách sản phẩm.");
-			System.out.println("5. Thêm sản phẩm vào giỏ.");
-			System.out.println("6. Xem danh sách đơn hàng.");
-			System.out.println("7. Giỏ hàng.");
-			System.out.println("8. Đăng xuất.");
+			System.out.println("5. Giỏ hàng.");
+			System.out.println("6. Đăng xuất.");
 			System.out.println("Vui lòng chọn thao tác:");
 			Scanner sc = new Scanner(System.in);
 			int action = sc.nextInt();
@@ -68,19 +66,13 @@ public class method {
 					productAction(listProduct);
 					break;
 				case 5:
-					break;
-				case 6:
-					break;
-				case 7:
 					order.action(user);
 					break;
-				
-				case 8:
+				case 6:
 					user.Logout();
 					System.out.println("Đăng xuất thành công.");
 					c = false;
 					break;
-					
 				default:
 					System.out.println("Số "+ action +" không có trong bảng chức năng này!. Vui lòng chọn lại");
 					this.showmenu(user, order);
@@ -93,7 +85,7 @@ public class method {
 		boolean c = true;
 		Scanner sc = new Scanner(System.in);
 		while(c) {
-			System.out.println("\n Bảng Chức Năng \n");
+			System.out.println("\n----Bảng Chức Năng----\n");
 			System.out.println("1. Tìm kiếm sản phẩm theo tên.");
 			System.out.println("2. Lọc sản phẩm theo giá.");
 			System.out.println("3. Xem danh sách sản phẩm.");
@@ -126,6 +118,7 @@ public class method {
 			 			if(listProduct.get(i).getPrice() <= gialonnhat && listProduct.get(i).getPrice() >= giabenhat) {
 			 				find = true;
 			 				listProduct.get(i).Show();
+			 				System.out.println();
 			 			}
 					}
 			 		if(find == false) {

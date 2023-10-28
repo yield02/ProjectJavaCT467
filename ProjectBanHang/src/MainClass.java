@@ -17,11 +17,8 @@ public class MainClass {
 		
 		mt.authencation(user);
 //		Đăng nhập xong
-		
 //		Show menu action
 		mt.showmenu(user, order);
-		
-		
 	}
 	
 	

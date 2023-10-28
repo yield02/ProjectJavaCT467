@@ -35,7 +35,7 @@ public class Order {
 			int action = sc.nextInt();
 			switch(action) {
 				case 1:
-					this.showAll();
+					this.showAll(user);
 					break;
 				case 2:
 					this.showOrder();
@@ -57,13 +57,14 @@ public class Order {
 		}
 	}
 	
-	public void showAll() {
+	public void showAll(User userin) {
 		ResultSet rs = null;
 		PreparedStatement stmt = null;
 		int stt = 1;
 		try {
 			DbConnect db = new DbConnect();
-			stmt = db.conn.prepareStatement("select * FROM `order` JOIN user ON o_user = u_id");
+			stmt = db.conn.prepareStatement("select * FROM `order` JOIN user ON o_user = u_id where o_user =?;");
+			stmt.setInt(1, userin.getId());
 			if (stmt.executeQuery() != null) { 
 		        rs = stmt.getResultSet();
 		        System.out.println("Tất cả đơn hàng");
@@ -75,7 +76,6 @@ public class Order {
 	                System.out.println("----------------------------");
 	                stt++;
 	            }
-			    return ;
 		    } else {
 		    	System.out.println("Chưa có đơn hàng nào cả!!!");
 		    }
