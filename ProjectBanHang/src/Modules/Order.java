@@ -38,13 +38,13 @@ public class Order {
 					this.showAll(user);
 					break;
 				case 2:
-					this.showOrder();
+					this.showOrder(user);
 					break;
 				case 3:
 					this.addNewOrder(user);
 					break;
 				case 4:
-					this.deleteOrder();
+					this.deleteOrder(user);
 					break;
 				case 5:
 					c = false;
@@ -61,6 +61,7 @@ public class Order {
 		ResultSet rs = null;
 		PreparedStatement stmt = null;
 		int stt = 1;
+		int count=0;
 		try {
 			DbConnect db = new DbConnect();
 			stmt = db.conn.prepareStatement("select * FROM `order` JOIN user ON o_user = u_id where o_user =?;");
@@ -69,6 +70,7 @@ public class Order {
 		        rs = stmt.getResultSet();
 		        System.out.println("Tất cả đơn hàng");
 		        while (rs.next()) {
+		        	count++;
 	                int id = rs.getInt("o_id");
 	                String user = rs.getString("u_name");
 	                System.out.println("-------Đơn hàng thứ "+ stt + "-------");
@@ -76,6 +78,9 @@ public class Order {
 	                System.out.println("----------------------------");
 	                stt++;
 	            }
+		        if(count==0) {
+		        	System.out.println("Bạn chưa có đơn hàng nào cả!!!");
+		        }
 		    } else {
 		    	System.out.println("Chưa có đơn hàng nào cả!!!");
 		    }
@@ -85,39 +90,62 @@ public class Order {
 		}
 	}
 
-	public void showOrder() {
+	public void showOrder(User userid) {
 		Scanner sc = new Scanner(System.in);
+		ResultSet rs0 = null;
 		ResultSet rs = null;
+		PreparedStatement stmt0 = null;
 		PreparedStatement stmt = null;
 		int stt = 1;
 		System.out.println("Nhập id của đơn hàng: ");
 		int id_order = sc.nextInt();
-		
+		int count=0;
 		float sum= 0;
 		try {
 			DbConnect db = new DbConnect();
-			stmt = db.conn.prepareStatement("select * from DetailOrder JOIN Product ON d_product= p_id WHERE d_order= ?; ");
-			stmt.setInt(1, id_order);
-			if (stmt.executeQuery() != null) { 
-		        rs = stmt.getResultSet();
-		        System.out.println("Chi tiết đơn hàng");
-		        System.out.println("---------------------------------------------------------------------------");
-		        while (rs.next()) {
-	                String product = rs.getString("p_name");
-	                double price = rs.getDouble("p_pri"
-	                		+ "ce");
-	                int sl= rs.getInt("d_amount");
-	                int maso= rs.getInt("d_id");
-	                System.out.println("STT: " + stt + ", Mã số: " + maso + ", product: " + product +", giá: "+ String.format("%,.0f", price) + " VND"+  ", số lượng: "+ sl);
-	                sum+= price*sl;
-	                stt++;
+			stmt0 = db.conn.prepareStatement("select * FROM `order` JOIN user ON o_user = u_id where o_user =? and o_id=?;");
+			stmt0.setInt(1, userid.getId());
+			stmt0.setInt(2, id_order);
+			if (stmt0.executeQuery() != null) { 
+		        rs0 = stmt0.getResultSet();
+		        while (rs0.next()) {
+		        	count++;
 	            }
-		        System.out.println("Tổng tất cả: "+ String.format("%,.0f", sum) + " VND");
-		        System.out.println("---------------------------------------------------------------------------");
-			    return ;
-		    } else {
-		    	System.out.println("Chưa có đơn hàng nào cả!!!");
-		    }
+		        if(count==0) {
+		        	System.out.println("Đơn hàng không tồn tại!!!");
+		        }else {
+		        	stmt = db.conn.prepareStatement("select * from DetailOrder JOIN Product ON d_product= p_id WHERE d_order= ?; ");
+					stmt.setInt(1, id_order);
+					
+					if (stmt.executeQuery() != null) { 
+				        rs = stmt.getResultSet();
+				        int dem=0;
+				        System.out.println("Chi tiết đơn hàng");
+				        System.out.println("----------------------------------------------------------------------------------------------------------");
+				        while (rs.next()) {
+				        	dem++;
+			                String product = rs.getString("p_name");
+			                double price = rs.getDouble("p_pri"
+			                		+ "ce");
+			                int sl= rs.getInt("d_amount");
+			                int maso= rs.getInt("d_id");
+			                System.out.println("STT: " + stt + ", Mã số: " + maso + ", product: " + product +", giá: "+ String.format("%,.0f", price) + " VND"+  ", số lượng: "+ sl);
+			                sum+= price*sl;
+			                stt++;
+			            }
+				        if(dem==0) {
+				        	System.out.println("Chưa có sản phẩm nào cả!!!");
+				        }else System.out.println("Tổng tất cả: "+ String.format("%,.0f", sum) + " VND");
+				        System.out.println("----------------------------------------------------------------------------------------------------------");
+					    
+				        DetailOrder dtorder = new DetailOrder();
+				        dtorder.handle(id_order);
+				        return ;
+				    } else {
+				    	System.out.println("Chưa có đơn hàng nào cả!!!");
+				    }
+		        }
+		    } 
 		}
 		catch (SQLException ex){    //xử lý ngoại lệ 
 		    System.out.println("SQLException: " + ex.getMessage()); 
@@ -141,12 +169,36 @@ public class Order {
 		}
 	}
 	
-	public void deleteOrder() {
+	public void deleteOrder(User user) {
+		DbConnect db = new DbConnect();
 		Scanner sc = new Scanner(System.in);
 		int check=1;
-		int maso;
-		System.out.println("Nhập id đơn hàng muốn xoá:");
-		maso = sc.nextInt();
+		int maso=-1;
+		int count=0;
+		
+		while(count==0) {
+			System.out.println("Nhập id đơn hàng muốn xoá (hoặc 0 để thoát):");
+			maso = sc.nextInt();
+			if(maso!=0) {
+				try {
+					PreparedStatement stmt0 = db.conn.prepareStatement("select * FROM `order` JOIN user ON o_user = u_id where o_user =? and o_id=?;");
+					stmt0.setInt(1, user.getId());
+					stmt0.setInt(2, maso);
+					if (stmt0.executeQuery() != null) { 
+						ResultSet rs0 = stmt0.getResultSet();
+						while (rs0.next()) {
+							count++;
+						}
+					}
+				} catch (SQLException ex){    //xử lý ngoại lệ 
+					System.out.println("SQLException: " + ex.getMessage()); 
+				}
+				if(count==0) {
+					System.out.println("Không có đơn hàng với mã số bạn nhập");
+				}
+			}else return;
+		}
+		
 		System.out.println("Bạn có chắc chắn muốn xoá? (1 để tiếp tục, 0 thoát)");
 		check = sc.nextInt();
 		ResultSet rs = null;
@@ -154,7 +206,7 @@ public class Order {
 		if(check==1) {
 			Connection conn = null;
 	        try {
-	            DbConnect db = new DbConnect();
+	            
 	            conn = db.conn;
 	            conn.setAutoCommit(false); // Bắt đầu giao dịch
 
