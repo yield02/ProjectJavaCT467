@@ -36,7 +36,7 @@ public class DetailOrder {
 			System.out.println("Thực hiện: ");
 			System.out.println("1. Thêm sản phẩm vào đơn hàng. ");
 			System.out.println("2. Xoá sản phẩm khỏi đơn hàng. ");
-			System.out.println("3. Xem tất cả sản phẩm của giỏ hàng.");
+//			System.out.println("3. Xem tất cả sản phẩm của giỏ hàng.");
 			System.out.println("4. Thoát.");
 			System.out.println("Vui lòng chọn thao tác:");
 			int action = sc.nextInt();
@@ -48,7 +48,7 @@ public class DetailOrder {
 					this.deleteProductFromOrder();
 					break;
 				case 3:
-					this.showDetail(id_order);
+//					this.showDetail(id_order);
 					break;
 				case 4:
 					c = false;
@@ -102,7 +102,8 @@ public class DetailOrder {
 		        System.out.println("---------------------------------------------------------------------------");
 		        while (rs.next()) {
 	                String product = rs.getString("p_name");
-	                double price = rs.getDouble("p_price");
+	                double price = rs.getDouble("p_pri"
+	                		+ "ce");
 	                int sl= rs.getInt("d_amount");
 	                int maso= rs.getInt("d_id");
 	                System.out.println("STT: " + stt + ", Mã số: " + maso + ", product: " + product +", giá: "+ String.format("%,.0f", price) + " VND"+  ", số lượng: "+ sl);

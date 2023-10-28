@@ -92,29 +92,31 @@ public class Order {
 		int stt = 1;
 		System.out.println("Nhập id của đơn hàng: ");
 		int id_order = sc.nextInt();
+		
+		float sum= 0;
 		try {
 			DbConnect db = new DbConnect();
-			stmt = db.conn.prepareStatement("select * FROM `order` JOIN user ON o_user = u_id WHERE o_id= ?");
+			stmt = db.conn.prepareStatement("select * from DetailOrder JOIN Product ON d_product= p_id WHERE d_order= ?; ");
 			stmt.setInt(1, id_order);
 			if (stmt.executeQuery() != null) { 
 		        rs = stmt.getResultSet();
-		        System.out.println("Đơn hàng của bạn: ");
+		        System.out.println("Chi tiết đơn hàng");
+		        System.out.println("---------------------------------------------------------------------------");
 		        while (rs.next()) {
-	                int id = rs.getInt("o_id");
-	                String user = rs.getString("u_name");
-	                System.out.println("----------------------------");
-	                System.out.println("ID: " + id + ", user: " + user);
-	                System.out.println("----------------------------");
+	                String product = rs.getString("p_name");
+	                double price = rs.getDouble("p_pri"
+	                		+ "ce");
+	                int sl= rs.getInt("d_amount");
+	                int maso= rs.getInt("d_id");
+	                System.out.println("STT: " + stt + ", Mã số: " + maso + ", product: " + product +", giá: "+ String.format("%,.0f", price) + " VND"+  ", số lượng: "+ sl);
+	                sum+= price*sl;
 	                stt++;
 	            }
-		        
-//		        Xử lý tiếp ở DetailOrder
-		        
-		        DetailOrder dtorder = new DetailOrder();
-		        dtorder.handle(id_order);
-		        return ;
+		        System.out.println("Tổng tất cả: "+ String.format("%,.0f", sum) + " VND");
+		        System.out.println("---------------------------------------------------------------------------");
+			    return ;
 		    } else {
-		    	System.out.println("Không tìm thấy đơn hàng!!!");
+		    	System.out.println("Chưa có đơn hàng nào cả!!!");
 		    }
 		}
 		catch (SQLException ex){    //xử lý ngoại lệ 
@@ -150,22 +152,6 @@ public class Order {
 		ResultSet rs = null;
 		PreparedStatement stmt = null;
 		if(check==1) {
-//			try {
-//				DbConnect db = new DbConnect();
-//				stmt = db.conn.prepareStatement("START TRANSACTION;\r\n"
-//						+ "DELETE FROM detailorder WHERE d_order = ?;\r\n"
-//						+ "DELETE FROM `order` WHERE o_id = ?;\r\n"
-//						+ "COMMIT;");
-//				stmt.setInt(1, maso);
-//				stmt.setInt(2, maso);
-//				stmt.executeUpdate();
-//			    rs = stmt.getResultSet(); 
-//	            System.out.println("Xoá đơn hàng thành công");
-//			    return ;
-//			}
-//			catch (SQLException ex){    //xử lý ngoại lệ 
-//			    System.out.println("SQLException: " + ex.getMessage()); 
-//			}
 			Connection conn = null;
 	        try {
 	            DbConnect db = new DbConnect();
