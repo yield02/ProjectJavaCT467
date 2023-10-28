@@ -4,7 +4,6 @@ import java.util.Scanner;
 import DatabaseConnect.DbConnect;
 import java.io.Console;
 import java.sql.*;
-import java.sql.ResultSet;
 
 
 public class Order {
@@ -141,7 +140,68 @@ public class Order {
 	}
 	
 	public void deleteOrder() {
-		
+		Scanner sc = new Scanner(System.in);
+		int check=1;
+		int maso;
+		System.out.println("Nhập id đơn hàng muốn xoá:");
+		maso = sc.nextInt();
+		System.out.println("Bạn có chắc chắn muốn xoá? (1 để tiếp tục, 0 thoát)");
+		check = sc.nextInt();
+		ResultSet rs = null;
+		PreparedStatement stmt = null;
+		if(check==1) {
+//			try {
+//				DbConnect db = new DbConnect();
+//				stmt = db.conn.prepareStatement("START TRANSACTION;\r\n"
+//						+ "DELETE FROM detailorder WHERE d_order = ?;\r\n"
+//						+ "DELETE FROM `order` WHERE o_id = ?;\r\n"
+//						+ "COMMIT;");
+//				stmt.setInt(1, maso);
+//				stmt.setInt(2, maso);
+//				stmt.executeUpdate();
+//			    rs = stmt.getResultSet(); 
+//	            System.out.println("Xoá đơn hàng thành công");
+//			    return ;
+//			}
+//			catch (SQLException ex){    //xử lý ngoại lệ 
+//			    System.out.println("SQLException: " + ex.getMessage()); 
+//			}
+			Connection conn = null;
+	        try {
+	            DbConnect db = new DbConnect();
+	            conn = db.conn;
+	            conn.setAutoCommit(false); // Bắt đầu giao dịch
+
+	            PreparedStatement stmt1 = conn.prepareStatement("DELETE FROM detailorder WHERE d_order = ?;");
+	            stmt1.setInt(1, maso);
+	            stmt1.executeUpdate();
+
+	            PreparedStatement stmt2 = conn.prepareStatement("DELETE FROM `order` WHERE o_id = ?;");
+	            stmt2.setInt(1, maso);
+	            stmt2.executeUpdate();
+
+	            conn.commit(); // Kết thúc giao dịch
+	            System.out.println("Xoá đơn hàng thành công");
+	        } catch (SQLException ex) {
+	            try {
+	                if (conn != null) {
+	                    conn.rollback(); // Rollback giao dịch nếu có lỗi
+	                }
+	            } catch (SQLException rollbackEx) {
+	                System.out.println("Lỗi khi rollback giao dịch: " + rollbackEx.getMessage());
+	            }
+	            System.out.println("SQLException: " + ex.getMessage());
+	        } finally {
+	            try {
+	                if (conn != null) {
+	                    conn.setAutoCommit(true); // Trả lại trạng thái mặc định
+	                    conn.close();
+	                }
+	            } catch (SQLException closeEx) {
+	                System.out.println("Lỗi khi đóng kết nối: " + closeEx.getMessage());
+	            }
+	        }
+		}else return ;
 	}
 
 

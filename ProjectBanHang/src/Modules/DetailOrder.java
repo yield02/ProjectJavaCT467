@@ -45,7 +45,7 @@ public class DetailOrder {
 					this.addProductToOrder(id_order);
 					break;
 				case 2:
-//					this.deleteProductFromOrder();
+					this.deleteProductFromOrder();
 					break;
 				case 3:
 					this.showDetail(id_order);
@@ -104,7 +104,8 @@ public class DetailOrder {
 	                String product = rs.getString("p_name");
 	                double price = rs.getDouble("p_price");
 	                int sl= rs.getInt("d_amount");
-	                System.out.println(stt + ", product: " + product +", giá: "+ String.format("%,.0f", price) + " VND"+  ", số lượng: "+ sl);
+	                int maso= rs.getInt("d_id");
+	                System.out.println("STT: " + stt + ", Mã số: " + maso + ", product: " + product +", giá: "+ String.format("%,.0f", price) + " VND"+  ", số lượng: "+ sl);
 	                sum+= price*sl;
 	                stt++;
 	            }
@@ -118,5 +119,31 @@ public class DetailOrder {
 		catch (SQLException ex){    //xử lý ngoại lệ 
 		    System.out.println("SQLException: " + ex.getMessage()); 
 		}
+	}
+	
+	public void deleteProductFromOrder() {
+		Scanner sc = new Scanner(System.in);
+		int check=1;
+		int maso;
+		System.out.println("Nhập mã số sản phẩm muốn xoá:");
+		maso = sc.nextInt();
+		System.out.println("Bạn có chắc chắn muốn xoá? (1 để tiếp tục, 0 thoát)");
+		check = sc.nextInt();
+		ResultSet rs = null;
+		PreparedStatement stmt = null;
+		if(check==1) {
+			try {
+				DbConnect db = new DbConnect();
+				stmt = db.conn.prepareStatement("delete from DetailOrder where d_id= ?;");
+				stmt.setInt(1, maso);
+				stmt.executeUpdate();
+			    rs = stmt.getResultSet(); 
+	            System.out.println("Xoá sản phẩm khỏi đơn hàng thành công");
+			    return ;
+			}
+			catch (SQLException ex){    //xử lý ngoại lệ 
+			    System.out.println("SQLException: " + ex.getMessage()); 
+			}
+		}else return ;
 	}
 }
