@@ -96,7 +96,9 @@ public class method {
 			 	case 1:
 			 		boolean find = false;
 			 		System.out.print("Nhập tên sản phẩm: ");
-			 		String name = sc.next();
+			 		sc.nextLine();
+			 		String name;
+			 		name = sc.nextLine();
 			 		for(int i = 0; i < listProduct.size(); i++) {
 			 			if(listProduct.get(i).getName().contains(name)) {
 			 				find = true;
@@ -104,6 +106,7 @@ public class method {
 			 			}
 					}
 			 		if(find == false) {
+			 			System.out.println(name);
 		 				System.out.println("Không tìm thấy sản phẩm!!");
 		 			}
 			 		break;

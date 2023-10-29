@@ -167,7 +167,7 @@ public class User {
 				continue;
 			}
 			else {
-				if(this.authencation(this.name, newpwd) == true) {
+				if(this.authencation(this.name, oldpwd) == true) {
 					// Đổi mật khẩu;
 					PreparedStatement stmt = null;
 					DbConnect db = new DbConnect();
